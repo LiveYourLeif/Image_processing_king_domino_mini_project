@@ -6,6 +6,7 @@ cropped_picture = picture0[0:100, 100:200]
 cv2.imshow("Cropped image", cropped_picture)
 cv2.imshow("original", picture0)
 
+#average RGB i croppede billede
 avg_col = np.average(cropped_picture, axis=0)
 avg_color = np.average(avg_col, axis = 0)
 print(f"avg_color: {avg_color}")
