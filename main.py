@@ -9,9 +9,13 @@ cropped_picture = picture1[0:100, 0:100]
 cv2.imshow("1", picture0)
 cv2.imshow("2", picture1)
 cv2.imshow("3", cropped_picture)
-avg_HSV = np.average(picture1, axis=0)
-avg_HsV = np.average(avg_HSV, axis=0)
-print(avg_HsV)
+lower_range = np.array([30, 130, 100])
+upper_range = np.array([86, 255, 190])
+
+
+
+mask = cv2.inRange(cropped_picture, lower_range, upper_range)
+cv2.imshow("DANG", mask)
 #cv2.imshow("Cropped image", cropped_picture)
 #cv2.imshow("original", picture0)
 
