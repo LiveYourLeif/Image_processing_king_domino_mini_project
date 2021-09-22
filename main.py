@@ -6,16 +6,18 @@ picture1 = cv2.cvtColor(picture0, cv2.COLOR_BGR2HSV)
 cropped_picture = picture1[0:100, 0:100]
 
 
-cv2.imshow("1", picture0)
-cv2.imshow("2", picture1)
-cv2.imshow("3", cropped_picture)
-lower_range = np.array([30, 130, 100])
-upper_range = np.array([86, 255, 190])
+cv2.imshow("RGB", picture0)
+cv2.imshow("HSV", picture1)
+
+lower_range = np.array([35, 154, 140])
+upper_range = np.array([50, 249, 176])
 
 
 
-mask = cv2.inRange(cropped_picture, lower_range, upper_range)
-cv2.imshow("DANG", mask)
+mask = cv2.inRange(picture1, lower_range, upper_range)
+cropped_picture = mask[0:100, 0:100]
+cv2.imshow("Cropped", cropped_picture)
+cv2.imshow("Grass Tiles", mask)
 #cv2.imshow("Cropped image", cropped_picture)
 #cv2.imshow("original", picture0)
 
@@ -23,8 +25,8 @@ cv2.imshow("DANG", mask)
 
 
 #average RGB i croppede billede
-avg_col = np.average(cropped_picture, axis=0)
-avg_color = np.average(avg_col, axis = 0)
+avg_col = np.average(cropped_picture, axis=None)
+avg_color = np.average(avg_col, axis = None)
 print(f"avg_color: {avg_color}")
 
 #En prøve i at convertere billedet til HSV og så ændre V værdien
