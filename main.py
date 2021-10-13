@@ -1,9 +1,13 @@
 import cv2
 import numpy as np
 
+
 picture0 = cv2.imread("1.jpg")
 blurredPicture = cv2.GaussianBlur(picture0, (5, 5), 0)
 picture1 = cv2.cvtColor(blurredPicture, cv2.COLOR_BGR2HSV) # Converts the first picture to HSV
+maskMatrix = np.zeros((5, 5))
+print(maskMatrix)
+
 
 #Ranges of the certain tiles within the game
 grass_lowRange = np.array([35, 154, 140])
@@ -27,21 +31,42 @@ sand_mask = cv2.inRange(picture1, sand_lowRange, sand_upperRange)
 desert_mask = cv2.inRange(picture1, desert_lowRange, desert_upperRange)
 crown_mask = cv2.inRange(picture1, crown_lowRange, crown_upperRange)
 
+#morpher forest
 kernel = np.ones((7, 7), np.uint8)
-morph_grass = cv2.morphologyEx(forest_mask, cv2.MORPH_OPEN, kernel)
-cv2.imshow("morph", morph_grass)
+morph_forest = cv2.morphologyEx(forest_mask, cv2.MORPH_OPEN, kernel)
+cv2.imshow("morph", morph_forest)
 
-mask_list = [grass_mask, water_mask, forest_mask, sand_mask , desert_mask, crown_mask]
+mask_list = [grass_mask, water_mask, morph_forest, sand_mask, desert_mask, crown_mask]
+mask_names = ["Grass tile", "Water tile", "Forest tile", "Sand tile", "Desert tile", "Crown tile"]
 
-#iterate over each 100 pixel in and print out the average pixel value if its above or equal to 50
-counter = 0 # Variable for counting means
-for y in range(0, 500, 100):
-    for x in range(0, 500, 100):
-        for mask in mask_list:
-            tile = mask[y: y+100, x: x+100]
+
+
+# iterate over each 100 pixel in and print out the average pixel value if its above or equal to 60
+counter = 0  # Variable for counting means
+
+
+#for y in range(0, 500, 100):
+    #for x in range(0, 500, 100):
+        #for mask in mask_list:
+            #tile = mask[y: y+100, x: x+100]
+            #if np.average(tile) >= 60:
+                #print(f"Mean {counter}: {np.average(tile)}")
+                #counter += 1
+
+
+
+for i in mask_list:
+    for y in range(0, 500, 100):
+        for x in range(0, 500, 100):
+            tile = i[y: y + 100, x: x + 100]
             if np.average(tile) >= 60:
-                counter += 1
-                print(f"Mean {counter}: {np.average(tile)}")
+                if np.any(mask_list) and np.average(tile) >= 60:
+                    print(f"{counter}: {np.average(tile)}")
+                    counter += 1
+                #counter += 1
+                #print(f"Mean {counter}: {np.average(tile)} {mask_list == True} ")
+
+
 
 
 
@@ -52,7 +77,7 @@ for y in range(0, 500, 100):
 
 while True:
     #add contours around the tiles, and apply a white line around the given tiles
-    contours,hierarchy = cv2.findContours(water_mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    contours, hierarchy = cv2.findContours(water_mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     #for contour in contours: #prøver at kun tegne contours rundt om de store brikker
         #area = cv2.contourArea(contour)
         #if area > 5000:
