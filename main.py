@@ -5,7 +5,7 @@ import numpy as np
 picture0 = cv2.imread("1.jpg")
 blurredPicture = cv2.GaussianBlur(picture0, (5, 5), 0)
 picture1 = cv2.cvtColor(blurredPicture, cv2.COLOR_BGR2HSV) # Converts the first picture to HSV
-maskMatrix = np.zeros((5, 5))
+maskMatrix = np.zeros((5, 5), dtype=np.uint8)
 
 
 
@@ -34,7 +34,7 @@ crown_mask = cv2.inRange(picture1, crown_lowRange, crown_upperRange)
 #morpher forest
 kernel = np.ones((7, 7), np.uint8)
 morph_forest = cv2.morphologyEx(forest_mask, cv2.MORPH_OPEN, kernel)
-cv2.imshow("morph", morph_forest)
+#cv2.imshow("morph", morph_forest)
 
 mask_list = [grass_mask, water_mask, morph_forest, sand_mask, desert_mask, crown_mask]
 
@@ -55,7 +55,57 @@ for mask in mask_list:
                 print(f"{maskNumber}: {np.average(tile)}")
                 maskMatrix[y1-1, x1-1] = maskNumber
 #print(y1, x1)
+cv2.imshow("before", maskMatrix)
 print(maskMatrix)
+
+def grassFire (newMaskMatrix, coordinates, currentId, tileNr):
+    #create burnedQueue deque to keep track of positions to burn
+    burnedQueue = deque([])
+    somethingBurned = False
+
+
+    if newMaskMatrix[coordinates[0], coordinates[1]] == tileNr:
+        burnedQueue.append(coordinates)
+        somethingBurned = True
+        blobSize = 0
+
+    while len(burnedQueue) > 0:
+        current_pos = burnedQueue.pop()
+        y, x = current_pos
+        # Burn current_pos with current id
+        newMaskMatrix[y, x] = currentId
+        # Add connections to burn_queue
+        if y - 1 >= 0 and newMaskMatrix[y - 1, x] == tileNr:
+            burnedQueue.append((y - 1, x))
+        if x - 1 >= 0 and newMaskMatrix[y, x - 1] == tileNr:
+            burnedQueue.append((y, x - 1))
+        if y + 1 < newMaskMatrix.shape[0] and newMaskMatrix[y + 1, x] == tileNr:
+            burnedQueue.append((y + 1, x))
+        if x + 1 < newMaskMatrix.shape[1] and newMaskMatrix[y, x + 1] == tileNr:
+            burnedQueue.append((y, x + 1))
+        blobSize += 1
+
+
+    if somethingBurned:
+        currentId += 20
+
+    return currentId, newMaskMatrix, tileNr, blobSize
+
+nextId = 20
+
+for i in range(7):
+    for y, row in enumerate(maskMatrix):
+        for x, pixel in enumerate(row):
+            nextId, maskMatrix, tileNr = grassFire(maskMatrix, (y, x), nextId, i)
+
+
+
+
+
+
+cv2.imshow("new", maskMatrix)
+
+
 
 
 
@@ -63,12 +113,11 @@ print(maskMatrix)
 #contours
 while True:
 #masks displayed on the screen
-    cv2.imshow("grass", grass_mask)
-
-    cv2.imshow("forest", forest_mask)
-    cv2.imshow("sand", sand_mask)
-    cv2.imshow("desert", desert_mask)
-    cv2.imshow("crown", crown_mask)
+    #cv2.imshow("grass", grass_mask)
+    #cv2.imshow("forest", forest_mask)
+    #cv2.imshow("sand", sand_mask)
+    #cv2.imshow("desert", desert_mask)
+    #cv2.imshow("crown", crown_mask)
 
 
 
@@ -80,9 +129,9 @@ while True:
             #cv2.drawContours(picture0, contour, -1, (255, 255, 255), 3)
 
     cv2.drawContours(picture0, contours, -1, (255, 255, 255), 3)
-    cv2.imshow("water", water_mask)
-    cv2.imshow("RGB", picture0)
-
+   # cv2.imshow("water", water_mask)
+   # cv2.imshow("RGB", picture0)
+    cv2.imshow("mask", maskMatrix)
     key = cv2.waitKey(1) #when the user presses esc key, the program shuts down
     if key == 27:
         break
