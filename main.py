@@ -58,45 +58,50 @@ for mask in mask_list:
 cv2.imshow("before", maskMatrix)
 print(maskMatrix)
 
-def grassFire (newMaskMatrix, coordinates, currentId, tileNr):
+def grassFire (newMaskMatrix, coordinates, currentId, tileValue):
     #create burnedQueue deque to keep track of positions to burn
     burnedQueue = deque([])
     somethingBurned = False
+    blobSize = 0
 
 
-    if newMaskMatrix[coordinates[0], coordinates[1]] == tileNr:
+
+    if newMaskMatrix[coordinates[0], coordinates[1]] == tileValue:
         burnedQueue.append(coordinates)
         somethingBurned = True
-        blobSize = 0
 
     while len(burnedQueue) > 0:
         current_pos = burnedQueue.pop()
         y, x = current_pos
-        # Burn current_pos with current id
-        newMaskMatrix[y, x] = currentId
+        if newMaskMatrix[y, x] == tileValue:
+        # Burn current_pos with current id and increment current blobSize
+            blobSize += 1
+            newMaskMatrix[y, x] = currentId
         # Add connections to burn_queue
-        if y - 1 >= 0 and newMaskMatrix[y - 1, x] == tileNr:
+        if (y - 1 >= 0) and (newMaskMatrix[y - 1, x] == tileValue):
             burnedQueue.append((y - 1, x))
-        if x - 1 >= 0 and newMaskMatrix[y, x - 1] == tileNr:
+        if (x - 1 >= 0) and (newMaskMatrix[y, x - 1] == tileValue):
             burnedQueue.append((y, x - 1))
-        if y + 1 < newMaskMatrix.shape[0] and newMaskMatrix[y + 1, x] == tileNr:
+        if (y + 1 < newMaskMatrix.shape[0]) and (newMaskMatrix[y + 1, x] == tileValue):
             burnedQueue.append((y + 1, x))
-        if x + 1 < newMaskMatrix.shape[1] and newMaskMatrix[y, x + 1] == tileNr:
+        if (x + 1 < newMaskMatrix.shape[1]) and (newMaskMatrix[y, x + 1] == tileValue):
             burnedQueue.append((y, x + 1))
-        blobSize += 1
+
 
 
     if somethingBurned:
-        currentId += 20
+        print(currentId, blobSize)
+        currentId += 10
+    return currentId, newMaskMatrix, tileValue
 
-    return currentId, newMaskMatrix, tileNr, blobSize
-
-nextId = 20
+nextId = 10
 
 for i in range(7):
     for y, row in enumerate(maskMatrix):
         for x, pixel in enumerate(row):
-            nextId, maskMatrix, tileNr = grassFire(maskMatrix, (y, x), nextId, i)
+            nextId, maskMatrix, tileValue = grassFire(maskMatrix, (y, x), nextId, i)
+
+
 
 
 
