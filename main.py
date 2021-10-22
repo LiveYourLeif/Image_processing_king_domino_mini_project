@@ -62,7 +62,7 @@ def grassFire (newMaskMatrix, coordinates, currentId, tileValue):
     #create burnedQueue deque to keep track of positions to burn
     burnedQueue = deque([])
     somethingBurned = False
-    blobSize = 0
+    sizeOfBlob = 0
 
 
 
@@ -75,7 +75,7 @@ def grassFire (newMaskMatrix, coordinates, currentId, tileValue):
         y, x = current_pos
         if newMaskMatrix[y, x] == tileValue:
         # Burn current_pos with current id and increment current blobSize
-            blobSize += 1
+            sizeOfBlob += 1
             newMaskMatrix[y, x] = currentId
         # Add connections to burn_queue
         if (y - 1 >= 0) and (newMaskMatrix[y - 1, x] == tileValue):
@@ -90,7 +90,7 @@ def grassFire (newMaskMatrix, coordinates, currentId, tileValue):
 
 
     if somethingBurned:
-        print(currentId, blobSize)
+        print(currentId, sizeOfBlob)
         currentId += 10
     return currentId, newMaskMatrix, tileValue
 
