@@ -42,8 +42,8 @@ morph_forest = cv2.morphologyEx(forest_mask, cv2.MORPH_OPEN, kernel)
 mask_list = [grass_mask, water_mask, morph_forest, sand_mask, desert_mask, crown_mask]
 maskNumber = 0
 
-for mask in mask_list:
-    maskNumber = maskNumber + 1
+#for mask in mask_list:
+for maskNumber, mask in enumerate(mask_list, 1):
     y1 = 0
     for y in range(0, 500, 100):
         y1 = y1 + 1
@@ -52,7 +52,6 @@ for mask in mask_list:
             x1 = x1 + 1
             tile = mask[y: y + 100, x: x + 100]
             if np.average(tile) >= 60:
-                #print(f"{maskNumber}: {np.average(tile)}")
                 maskMatrix[y1-1, x1-1] = maskNumber
 
 
@@ -64,6 +63,7 @@ def grassFire (newMaskMatrix, coordinates, currentId, tileValue):
     burnedQueue = deque([])
     somethingBurned = False
     sizeOfBlob = 0
+    crownCounter = 0
 
     if newMaskMatrix[coordinates[0], coordinates[1]] == tileValue:
         burnedQueue.append(coordinates)
@@ -76,6 +76,9 @@ def grassFire (newMaskMatrix, coordinates, currentId, tileValue):
         # Burn current_pos with current id and increment current blobSize
             sizeOfBlob += 1
             newMaskMatrix[y, x] = currentId
+            crownCounter += templateMatching.crownMatrix[y, x]
+
+
         # Add connections to burn_queue
         if (y - 1 >= 0) and (newMaskMatrix[y - 1, x] == tileValue):
             burnedQueue.append((y - 1, x))
@@ -87,16 +90,24 @@ def grassFire (newMaskMatrix, coordinates, currentId, tileValue):
             burnedQueue.append((y, x + 1))
 
     if somethingBurned:
-        print("tileValue with number:", tileValue,"has the size of", sizeOfBlob)
         currentId += 10
-    return currentId, newMaskMatrix, tileValue
+    return currentId, newMaskMatrix, tileValue, sizeOfBlob, crownCounter
 
 nextId = 10
 
+totalScoreCount = 0
+if maskMatrix[2, 2] == 6:
+    totalScoreCount += 10
 for i in range(7):
     for y, row in enumerate(maskMatrix):
         for x, pixel in enumerate(row):
-            nextId, maskMatrix, tileValue = grassFire(maskMatrix, (y, x), nextId, i)
+            nextId, maskMatrix, tileValue, blobSize, crownCount = grassFire(maskMatrix, (y, x), nextId, i)
+            totalScoreCount += blobSize * crownCount
+            if blobSize > 0:
+                print("tileValue with number:", tileValue, "has the size of", blobSize, crownCount, "Score is:", totalScoreCount)
+
+
+
 
 
 while True:
