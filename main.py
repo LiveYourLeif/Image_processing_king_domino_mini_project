@@ -1,12 +1,15 @@
 from collections import deque
 import cv2
 import numpy as np
+import templateMatching
 
 
+#read the first image, add blur and convert its colors to HSV
 picture0 = cv2.imread("1.jpg")
 blurredPicture = cv2.GaussianBlur(picture0, (5, 5), 0)
 picture1 = cv2.cvtColor(blurredPicture, cv2.COLOR_BGR2HSV) # Converts the first picture to HSV
-maskMatrix = np.zeros((5, 5), dtype=np.uint8)
+maskMatrix = np.zeros((5, 5), dtype=np.uint8) #lav en 5x5 tom matrice
+#
 
 
 
@@ -35,12 +38,8 @@ crown_mask = cv2.inRange(picture1, crown_lowRange, crown_upperRange)
 #morpher forest
 kernel = np.ones((7, 7), np.uint8)
 morph_forest = cv2.morphologyEx(forest_mask, cv2.MORPH_OPEN, kernel)
-#cv2.imshow("morph", morph_forest)
 
 mask_list = [grass_mask, water_mask, morph_forest, sand_mask, desert_mask, crown_mask]
-
-
-# iterate over each 100 pixel in and print out the average pixel value if its above or equal to 60
 maskNumber = 0
 
 for mask in mask_list:
@@ -53,9 +52,10 @@ for mask in mask_list:
             x1 = x1 + 1
             tile = mask[y: y + 100, x: x + 100]
             if np.average(tile) >= 60:
-                print(f"{maskNumber}: {np.average(tile)}")
+                #print(f"{maskNumber}: {np.average(tile)}")
                 maskMatrix[y1-1, x1-1] = maskNumber
-#print(y1, x1)
+
+
 cv2.imshow("before", maskMatrix)
 print(maskMatrix)
 
@@ -64,8 +64,6 @@ def grassFire (newMaskMatrix, coordinates, currentId, tileValue):
     burnedQueue = deque([])
     somethingBurned = False
     sizeOfBlob = 0
-
-
 
     if newMaskMatrix[coordinates[0], coordinates[1]] == tileValue:
         burnedQueue.append(coordinates)
@@ -88,10 +86,8 @@ def grassFire (newMaskMatrix, coordinates, currentId, tileValue):
         if (x + 1 < newMaskMatrix.shape[1]) and (newMaskMatrix[y, x + 1] == tileValue):
             burnedQueue.append((y, x + 1))
 
-
-
     if somethingBurned:
-        print(currentId, sizeOfBlob)
+        print("tileValue with number:", tileValue,"has the size of", sizeOfBlob)
         currentId += 10
     return currentId, newMaskMatrix, tileValue
 
@@ -103,40 +99,7 @@ for i in range(7):
             nextId, maskMatrix, tileValue = grassFire(maskMatrix, (y, x), nextId, i)
 
 
-
-
-
-
-
-
-cv2.imshow("new", maskMatrix)
-
-
-
-
-
-
-#contours
 while True:
-#masks displayed on the screen
-    #cv2.imshow("grass", grass_mask)
-    #cv2.imshow("forest", forest_mask)
-    #cv2.imshow("sand", sand_mask)
-    #cv2.imshow("desert", desert_mask)
-    #cv2.imshow("crown", crown_mask)
-
-
-
-    #add contours around the tiles, and apply a white line around the given tiles
-    contours, hierarchy = cv2.findContours(water_mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-    #for contour in contours: #prøver at kun tegne contours rundt om de store brikker
-        #area = cv2.contourArea(contour)
-        #if area > 5000:
-            #cv2.drawContours(picture0, contour, -1, (255, 255, 255), 3)
-
-    cv2.drawContours(picture0, contours, -1, (255, 255, 255), 3)
-   # cv2.imshow("water", water_mask)
-   # cv2.imshow("RGB", picture0)
     cv2.imshow("mask", maskMatrix)
     key = cv2.waitKey(1) #when the user presses esc key, the program shuts down
     if key == 27:
