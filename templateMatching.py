@@ -13,7 +13,7 @@ crownMatrix = np.zeros((5, 5), np.uint8)
 w, h = templateOriginal.shape[::-1]
 
 # res = cv2.matchTemplate(picture, template, cv2.TM_CCOEFF_NORMED, mask = template)
-threshold = 0.8 # Secures how accurate the template should be in comparission with the picture. set to 80%
+threshold = 0.73 # Secures how accurate the template should be in comparission with the picture. set to 80%
 crownCoordinates = []
 coordinates_are_close = False
 #loc = np.where(res >= threshold)
