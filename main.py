@@ -54,7 +54,7 @@ crownMask = cv2.inRange(picture1, crownLowRange, crownUpperRange)
 We decided to apply morphology to the various tiles in order to reduce noise.
 First we created a kernel with the size of 7x7 , and applied compound operations to reduce noise
 surrounding the different masks. The compound operations(Open & close) are chosen by how each tile type has different
-noisy elements in their design, such as houses, boats etc.da
+noisy elements in their design, such as houses, boats etc.
 '''
 kernel = np.ones((7, 7), np.uint8)
 morphGrass = cv2.morphologyEx(grassMask, cv2.MORPH_CLOSE, kernel)
