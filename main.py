@@ -67,9 +67,8 @@ bgr value. If the average bgr value is higher than 60 we implement the current m
 called maskMatrix)
 When the loop is done, it prints the matrix with matching tile-type in the picture, ranging from 1 to 6
 '''
-maskList = [grassMask, waterMask, morphForest, morphSand, desertMask, crownMask, morphMine]
+maskList = [morphGrass, morphWater, morphForest, morphSand, morphDoubleDesert, crownDoubleMorph, morphMine]
 maskNumber = 0
-#for mask in maskList:
 for maskNumber, mask in enumerate(maskList, 1):
     y1 = 0
     for y in range(0, 500, 100):
@@ -78,7 +77,7 @@ for maskNumber, mask in enumerate(maskList, 1):
         for x in range(0, 500, 100):
             x1 = x1 + 1
             tile = mask[y: y + 100, x: x + 100]
-            if np.average(tile) >= 70:
+            if np.average(tile) >= 60:
                 maskMatrix[y1-1, x1-1] = maskNumber
 
 
@@ -138,8 +137,11 @@ for i in range(8):
 
 
 while True:
-    cv2.imshow("mine", mineMask)
-    cv2.imshow("morphMine", morphMine)
+
+
+    cv2.imshow("DesertOpen", morphDesert)
+    cv2.imshow("Nomorph", desertMask)
+    cv2.imshow("desertClosed", morphDoubleDesert)
     key = cv2.waitKey(1) #when the user presses esc key, the program shuts down
     if key == 27:
         break
