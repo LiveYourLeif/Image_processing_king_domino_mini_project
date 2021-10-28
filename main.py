@@ -8,7 +8,7 @@ import templateMatching
 Below the first picture is read, blurred through Gaussian blur and corverted to HSV colors.
 In addition we create an empty 5x5 matrix, which is used later on to perform the Grassfire algorithm.
 '''
-picture0 = cv2.imread("1.jpg")
+picture0 = cv2.imread("Cropped and perspective corrected boards/1.jpg")
 blurredPicture = cv2.GaussianBlur(picture0, (5, 5), 0)
 picture1 = cv2.cvtColor(blurredPicture, cv2.COLOR_BGR2HSV)
 maskMatrix = np.zeros((5, 5), dtype=np.uint8)
