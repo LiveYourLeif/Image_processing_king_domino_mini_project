@@ -4,10 +4,10 @@ import cv2
 import numpy as np
 
 picture = cv2.imread("Cropped and perspective corrected boards/1.jpg", 0)
-templateOriginal = cv2.imread("Cropped and perspective corrected boards/CROWNTEMPLATE.png", 0)
-templateRotate90 = cv2.rotate(cv2.imread("Cropped and perspective corrected boards/CROWNTEMPLATE.png", 0), cv2.ROTATE_90_CLOCKWISE)
-templateRotate180 = cv2.rotate(cv2.imread("Cropped and perspective corrected boards/CROWNTEMPLATE.png", 0), cv2.ROTATE_180)
-templateRotate270 = cv2.rotate(cv2.imread("Cropped and perspective corrected boards/CROWNTEMPLATE.png", 0), cv2.ROTATE_90_COUNTERCLOCKWISE)
+templateOriginal = cv2.imread("Cropped and perspective corrected boards/EditedTemplateForcrown.png", 0)
+templateRotate90 = cv2.rotate(cv2.imread("Cropped and perspective corrected boards/EditedTemplateForcrown.png", 0), cv2.ROTATE_90_CLOCKWISE)
+templateRotate180 = cv2.rotate(cv2.imread("Cropped and perspective corrected boards/EditedTemplateForcrown.png", 0), cv2.ROTATE_180)
+templateRotate270 = cv2.rotate(cv2.imread("Cropped and perspective corrected boards/EditedTemplateForcrown.png", 0), cv2.ROTATE_90_COUNTERCLOCKWISE)
 templateList = [templateOriginal, templateRotate90, templateRotate180, templateRotate270]
 crownMatrix = np.zeros((5, 5), np.uint8)
 w, h = templateOriginal.shape[::-1]
@@ -37,7 +37,6 @@ for template in templateList: #itererer over de fire retninger af konge kronen
             crownCoordinates.append(pt)
             crownMatrix[pt[1] // 100, pt[0] // 100] +=1 #increment the point in the matrix with the given coordinates with 1
 print(crownMatrix)
-cv2.imwrite('Cropped and perspective corrected boards/res.png', picture)
 cv2.imshow("game maps", picture)
 cv2.imshow("template", templateOriginal)
 
