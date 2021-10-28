@@ -4,12 +4,15 @@ import numpy as np
 import templateMatching
 
 
-#read the first image, add blur and convert its colors to HSV
+'''
+Below the first picture is read, blurred through Gaussian blur and corverted to HSV colors.
+In addition we create an empty 5x5 matrix, which is used later on to perform the Grassfire algorithm.
+'''
 picture0 = cv2.imread("1.jpg")
 blurredPicture = cv2.GaussianBlur(picture0, (5, 5), 0)
-picture1 = cv2.cvtColor(blurredPicture, cv2.COLOR_BGR2HSV) # Converts the first picture to HSV
-maskMatrix = np.zeros((5, 5), dtype=np.uint8) #lav en 5x5 tom matrice
-#
+picture1 = cv2.cvtColor(blurredPicture, cv2.COLOR_BGR2HSV)
+maskMatrix = np.zeros((5, 5), dtype=np.uint8)
+
 
 
 
@@ -48,16 +51,25 @@ crownMask = cv2.inRange(picture1, crownLowRange, crownUpperRange)
 
 
 '''
-We decided to apply morphology to the forest tile in order to reduce noise, since the forest tile had the most noise
-compared to the neighbour tiles.
-First we created a kernel with the size of 7x7 , and applied a compound operation(Opening) to reduce noise
-sourrounding the forest masks.  
+We decided to apply morphology to the various tiles in order to reduce noise.
+First we created a kernel with the size of 7x7 , and applied compound operations to reduce noise
+surrounding the different masks. The compound operations(Open & close) are chosen by how each tile type has different
+noisy elements in their design, such as houses, boats etc.da
 '''
 kernel = np.ones((7, 7), np.uint8)
+morphGrass = cv2.morphologyEx(grassMask, cv2.MORPH_CLOSE, kernel)
+morphWater = cv2.morphologyEx(waterMask, cv2.MORPH_CLOSE, kernel)
 morphForest = cv2.morphologyEx(forestMask, cv2.MORPH_OPEN, kernel)
-morphMine = cv2.morphologyEx(mineMask, cv2.MORPH_CLOSE, kernel)
-morphDesert = cv2.morphologyEx(desertMask, cv2.MORPH_OPEN, kernel)
 morphSand = cv2.morphologyEx(sandMask, cv2.MORPH_CLOSE, kernel)
+morphDesert = cv2.morphologyEx(desertMask, cv2.MORPH_OPEN, kernel)
+morphDoubleDesert = cv2.morphologyEx(morphDesert, cv2.MORPH_CLOSE, kernel)
+morphMine = cv2.morphologyEx(mineMask, cv2.MORPH_CLOSE, kernel)
+# The crown tile is first morphed open, to reduce noise surrounding, and then morphed close, to fill the crown tile more.
+crownMorph = cv2.morphologyEx(crownMask, cv2.MORPH_OPEN, kernel)
+crownDoubleMorph = cv2.morphologyEx(crownMorph, cv2.MORPH_CLOSE, kernel)
+
+
+
 
 
 '''
@@ -79,10 +91,10 @@ for maskNumber, mask in enumerate(maskList, 1):
             tile = mask[y: y + 100, x: x + 100]
             if np.average(tile) >= 60:
                 maskMatrix[y1-1, x1-1] = maskNumber
-
-
 cv2.imshow("before", maskMatrix)
 print(maskMatrix)
+
+
 
 def grassFire (newMaskMatrix, coordinates, currentId, tileValue):
     #create burnedQueue deque to keep track of positions to burn
@@ -131,6 +143,7 @@ for i in range(8):
             totalScoreCount += blobSize * crownCount
             if blobSize > 0:
                 print("tileValue with number:", tileValue, "has the size of", blobSize, crownCount, "Score is:", totalScoreCount)
+
 
 
 
