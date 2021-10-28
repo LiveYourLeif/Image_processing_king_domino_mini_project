@@ -57,16 +57,16 @@ surrounding the different masks. The compound operations(Open & close) are chose
 noisy elements in their design, such as houses, boats etc.
 '''
 kernel = np.ones((7, 7), np.uint8)
-morphGrass = cv2.morphologyEx(grassMask, cv2.MORPH_CLOSE, kernel)
-morphWater = cv2.morphologyEx(waterMask, cv2.MORPH_CLOSE, kernel)
-morphForest = cv2.morphologyEx(forestMask, cv2.MORPH_OPEN, kernel)
-morphSand = cv2.morphologyEx(sandMask, cv2.MORPH_CLOSE, kernel)
-morphDesert = cv2.morphologyEx(desertMask, cv2.MORPH_OPEN, kernel)
-morphDoubleDesert = cv2.morphologyEx(morphDesert, cv2.MORPH_CLOSE, kernel)
-morphMine = cv2.morphologyEx(mineMask, cv2.MORPH_CLOSE, kernel)
+morphedGrassMask = cv2.morphologyEx(grassMask, cv2.MORPH_CLOSE, kernel)
+morphedWaterMask = cv2.morphologyEx(waterMask, cv2.MORPH_CLOSE, kernel)
+morphedForestMask = cv2.morphologyEx(forestMask, cv2.MORPH_OPEN, kernel)
+morphedSandMask = cv2.morphologyEx(sandMask, cv2.MORPH_CLOSE, kernel)
+morphedDesertMask = cv2.morphologyEx(desertMask, cv2.MORPH_OPEN, kernel)
+morphedDesertMask2 = cv2.morphologyEx(morphedDesertMask, cv2.MORPH_CLOSE, kernel)
+morphedMineMask = cv2.morphologyEx(mineMask, cv2.MORPH_CLOSE, kernel)
 # The crown tile is first morphed open, to reduce noise surrounding, and then morphed close, to fill the crown tile more.
-crownMorph = cv2.morphologyEx(crownMask, cv2.MORPH_OPEN, kernel)
-crownDoubleMorph = cv2.morphologyEx(crownMorph, cv2.MORPH_CLOSE, kernel)
+morphedCrownMask = cv2.morphologyEx(crownMask, cv2.MORPH_OPEN, kernel)
+morphedCrownMask2 = cv2.morphologyEx(morphedCrownMask, cv2.MORPH_CLOSE, kernel)
 
 
 #Test kommentar, virk GIT!!!!!!
@@ -79,7 +79,7 @@ bgr value. If the average bgr value is higher than 60 we implement the current m
 called maskMatrix)
 When the loop is done, it prints the matrix with matching tile-type in the picture, ranging from 1 to 6
 '''
-maskList = [morphGrass, morphWater, morphForest, morphSand, morphDoubleDesert, crownDoubleMorph, morphMine]
+maskList = [morphedGrassMask, morphedWaterMask, morphedForestMask, morphedSandMask, morphedDesertMask2, morphedCrownMask2, morphedMineMask]
 maskNumber = 0
 for maskNumber, mask in enumerate(maskList, 1):
     y1 = 0
@@ -152,9 +152,7 @@ for i in range(8):
 while True:
 
 
-    cv2.imshow("DesertOpen", morphDesert)
-    cv2.imshow("Nomorph", desertMask)
-    cv2.imshow("desertClosed", morphDoubleDesert)
+
     key = cv2.waitKey(1) #when the user presses esc key, the program shuts down
     if key == 27:
         break
