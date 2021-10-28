@@ -69,7 +69,7 @@ crownMorph = cv2.morphologyEx(crownMask, cv2.MORPH_OPEN, kernel)
 crownDoubleMorph = cv2.morphologyEx(crownMorph, cv2.MORPH_CLOSE, kernel)
 
 
-
+#Test kommentar, virk GIT!!!!
 
 
 '''
