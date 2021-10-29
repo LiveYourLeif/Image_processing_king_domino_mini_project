@@ -39,7 +39,7 @@ cv2.createTrackbar('high V', 'controls', 255, 255, callback)
 
 while (1):
     # read source image
-    img = cv2.imread("5.jpg")
+    img = cv2.imread("Images/1.jpg")
     # convert sourece image to HSC color mode
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 

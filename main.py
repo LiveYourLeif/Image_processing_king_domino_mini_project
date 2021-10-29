@@ -24,12 +24,12 @@ grassLowRange = np.array([35, 154, 140])
 grassUpperRange = np.array([50, 249, 176])
 waterLowRange = np.array([95, 175, 68])
 waterUpperRange = np.array([111, 255, 255])
-forestLowRange = np.array([30, 0, 0])
-forestUpperRange = np.array([87, 255, 120])
+forestLowRange = np.array([36, 41, 0])
+forestUpperRange = np.array([64, 255, 139])
 sandLowRange = np.array([22, 230, 181])
 sandUpperRange = np.array([31, 255, 255])
-desertLowRange = np.array([0, 0, 50])
-desertUpperRange = np.array([30, 255, 112])
+desertLowRange = np.array([0, 74, 65])
+desertUpperRange = np.array([30, 150, 130])
 mineLowerRange = np.array([0, 0, 0])
 mineUpperRange = np.array([20, 88, 61])
 crownLowRange = np.array([0, 0, 85])
@@ -52,6 +52,7 @@ crownMask = cv2.inRange(picture1, crownLowRange, crownUpperRange)
 
 
 
+
 '''
 We decided to apply morphology to the various tiles in order to reduce noise.
 First we created a kernel with the size of 7x7 , and applied compound operations to reduce noise
@@ -66,12 +67,9 @@ morphedSandMask = cv2.morphologyEx(sandMask, cv2.MORPH_CLOSE, kernel)
 morphedDesertMask = cv2.morphologyEx(desertMask, cv2.MORPH_CLOSE, kernel)
 #morphedDesertMask2 = cv2.morphologyEx(morphedDesertMask, cv2.MORPH_CLOSE, kernel)
 morphedMineMask = cv2.morphologyEx(mineMask, cv2.MORPH_CLOSE, kernel)
-# The crown tile is first morphed open, to reduce noise surrounding, and then morphed close, to fill the crown tile more.
 morphedCrownMask = cv2.morphologyEx(crownMask, cv2.MORPH_OPEN, kernel)
 morphedCrownMask2 = cv2.morphologyEx(morphedCrownMask, cv2.MORPH_CLOSE, kernel)
 
-
-#Test kommentar, virk GIT!!!!!!
 
 
 '''
