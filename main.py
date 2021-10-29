@@ -142,7 +142,11 @@ for i in range(8):
             nextId, maskMatrix, tileValue, blobSize, crownCount = grassFire(maskMatrix, (y, x), nextId, i)
             totalScoreCount += blobSize * crownCount
             if blobSize > 0:
-                print("tileValue with number:", tileValue, "has the size of", blobSize, crownCount, "Score is:", totalScoreCount)
+                print("tileValue with number:", tileValue, "has the size of", blobSize, "\n",
+                      "number of crowns on current tile:", crownCount, "Current score:", totalScoreCount, "\n")
+
+print("Total score is:", totalScoreCount)
+
 
 
 
@@ -152,7 +156,7 @@ for i in range(8):
 while True:
 
 
-
+    cv2.imshow("SHEE", maskMatrix)
     key = cv2.waitKey(1) #when the user presses esc key, the program shuts down
     if key == 27:
         break
