@@ -34,6 +34,7 @@ mineLowerRange = np.array([0, 0, 0])
 mineUpperRange = np.array([20, 88, 61])
 crownLowRange = np.array([0, 0, 85])
 crownUpperRange = np.array([28, 91, 243])
+#yo
 
 
 
