@@ -8,10 +8,11 @@ import templateMatching
 Below the first picture is read, blurred through Gaussian blur and corverted to HSV colors.
 In addition we create an empty 5x5 matrix, which is used later on to perform the Grassfire algorithm.
 '''
-picture0 = cv2.imread("Cropped and perspective corrected boards/1.jpg")
+picture0 = cv2.imread("Images/5.jpg")
 blurredPicture = cv2.GaussianBlur(picture0, (5, 5), 0)
 picture1 = cv2.cvtColor(blurredPicture, cv2.COLOR_BGR2HSV)
 maskMatrix = np.zeros((5, 5), dtype=np.uint8)
+cv2.imshow("Maa", maskMatrix)
 
 
 
@@ -61,8 +62,8 @@ morphedGrassMask = cv2.morphologyEx(grassMask, cv2.MORPH_CLOSE, kernel)
 morphedWaterMask = cv2.morphologyEx(waterMask, cv2.MORPH_CLOSE, kernel)
 morphedForestMask = cv2.morphologyEx(forestMask, cv2.MORPH_OPEN, kernel)
 morphedSandMask = cv2.morphologyEx(sandMask, cv2.MORPH_CLOSE, kernel)
-morphedDesertMask = cv2.morphologyEx(desertMask, cv2.MORPH_OPEN, kernel)
-morphedDesertMask2 = cv2.morphologyEx(morphedDesertMask, cv2.MORPH_CLOSE, kernel)
+morphedDesertMask = cv2.morphologyEx(desertMask, cv2.MORPH_CLOSE, kernel)
+#morphedDesertMask2 = cv2.morphologyEx(morphedDesertMask, cv2.MORPH_CLOSE, kernel)
 morphedMineMask = cv2.morphologyEx(mineMask, cv2.MORPH_CLOSE, kernel)
 # The crown tile is first morphed open, to reduce noise surrounding, and then morphed close, to fill the crown tile more.
 morphedCrownMask = cv2.morphologyEx(crownMask, cv2.MORPH_OPEN, kernel)
@@ -79,7 +80,7 @@ bgr value. If the average bgr value is higher than 60 we implement the current m
 called maskMatrix)
 When the loop is done, it prints the matrix with matching tile-type in the picture, ranging from 1 to 6
 '''
-maskList = [morphedGrassMask, morphedWaterMask, morphedForestMask, morphedSandMask, morphedDesertMask2, morphedCrownMask2, morphedMineMask]
+maskList = [morphedGrassMask, morphedWaterMask, morphedForestMask, morphedSandMask, morphedDesertMask, morphedCrownMask2, morphedMineMask]
 maskNumber = 0
 for maskNumber, mask in enumerate(maskList, 1):
     y1 = 0
@@ -89,7 +90,7 @@ for maskNumber, mask in enumerate(maskList, 1):
         for x in range(0, 500, 100):
             x1 = x1 + 1
             tile = mask[y: y + 100, x: x + 100]
-            if np.average(tile) >= 60:
+            if np.average(tile) >= 70:
                 maskMatrix[y1-1, x1-1] = maskNumber
 cv2.imshow("before", maskMatrix)
 print(maskMatrix)
@@ -134,7 +135,7 @@ def grassFire (newMaskMatrix, coordinates, currentId, tileValue):
 nextId = 10
 
 totalScoreCount = 0
-if maskMatrix[2, 2] == 6:
+if maskMatrix[2, 2] == 6 or maskMatrix[2,2] == 0:
     totalScoreCount += 10
 for i in range(8):
     for y, row in enumerate(maskMatrix):
@@ -154,9 +155,9 @@ print("Total score is:", totalScoreCount)
 
 
 while True:
-
-
-    cv2.imshow("SHEE", maskMatrix)
+    cv2.imshow("forest", forestMask)
+    cv2.imshow("MOForest", morphedForestMask)
+    #cv2.imshow("desertmorphed2", morphedDesertMask2)
     key = cv2.waitKey(1) #when the user presses esc key, the program shuts down
     if key == 27:
         break

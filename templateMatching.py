@@ -3,17 +3,17 @@ from collections import deque
 import cv2
 import numpy as np
 
-picture = cv2.imread("Cropped and perspective corrected boards/1.jpg", 0) #Change here to find the crowns in another photo!!
-templateOriginal = cv2.imread("Cropped and perspective corrected boards/EditedTemplateForcrown.png", 0)
-templateRotate90 = cv2.rotate(cv2.imread("Cropped and perspective corrected boards/EditedTemplateForcrown.png", 0), cv2.ROTATE_90_CLOCKWISE)
-templateRotate180 = cv2.rotate(cv2.imread("Cropped and perspective corrected boards/EditedTemplateForcrown.png", 0), cv2.ROTATE_180)
-templateRotate270 = cv2.rotate(cv2.imread("Cropped and perspective corrected boards/EditedTemplateForcrown.png", 0), cv2.ROTATE_90_COUNTERCLOCKWISE)
+picture = cv2.imread("Images/5.jpg", 0) #Change here to find the crowns in another photo!!
+templateOriginal = cv2.imread("Images/EditedTemplateForcrown.png", 0)
+templateRotate90 = cv2.rotate(cv2.imread("Images/EditedTemplateForcrown.png", 0), cv2.ROTATE_90_CLOCKWISE)
+templateRotate180 = cv2.rotate(cv2.imread("Images/EditedTemplateForcrown.png", 0), cv2.ROTATE_180)
+templateRotate270 = cv2.rotate(cv2.imread("Images/EditedTemplateForcrown.png", 0), cv2.ROTATE_90_COUNTERCLOCKWISE)
 templateList = [templateOriginal, templateRotate90, templateRotate180, templateRotate270]
 crownMatrix = np.zeros((5, 5), np.uint8)
 w, h = templateOriginal.shape[::-1]
 
 # res = cv2.matchTemplate(picture, template, cv2.TM_CCOEFF_NORMED, mask = template)
-threshold = 0.73 # Secures how accurate the template should be in comparission with the picture. set to 80%
+threshold = 0.68 # Secures how accurate the template should be in comparisson with the picture. set to 80%
 crownCoordinates = []
 coordinatesAreClose = False
 #loc = np.where(res >= threshold)
@@ -33,6 +33,7 @@ for template in templateList: #itererer over de fire retninger af konge kronen
             #if x and y coordinates are within 5 of the x and y in the tuple then coordinatesAreClose = True. This is what we use abs_tol for
             if(math.isclose(x, pt[0], abs_tol=5)) and (math.isclose(y, pt[1], abs_tol=5)):
                 coordinatesAreClose = True
+                break
             else:
                 continue
         if coordinatesAreClose == False: #append the coordinates if they aren't close to any other coordinates.
