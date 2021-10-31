@@ -3,7 +3,7 @@ from collections import deque
 import cv2
 import numpy as np
 
-picture = cv2.imread("Images/1.jpg", 0) #Change here to find the crowns in another photo!!
+picture = cv2.imread("Images/2.jpg", 0) #Change here to find the crowns in another photo!!
 templateOriginal = cv2.imread("Images/EditedTemplateForcrown.png", 0)
 templateRotate90 = cv2.rotate(cv2.imread("Images/EditedTemplateForcrown.png", 0), cv2.ROTATE_90_CLOCKWISE)
 templateRotate180 = cv2.rotate(cv2.imread("Images/EditedTemplateForcrown.png", 0), cv2.ROTATE_180)

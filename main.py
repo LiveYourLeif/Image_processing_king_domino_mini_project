@@ -8,7 +8,7 @@ import templateMatching
 Below the first picture is read, blurred through Gaussian blur and corverted to HSV colors.
 In addition we create an empty 5x5 matrix, which is used later on to perform the Grassfire algorithm.
 '''
-picture0 = cv2.imread("Images/1.jpg")
+picture0 = cv2.imread("Images/2.jpg")
 blurredPicture = cv2.GaussianBlur(picture0, (5, 5), 0)
 picture1 = cv2.cvtColor(blurredPicture, cv2.COLOR_BGR2HSV)
 maskMatrix = np.zeros((5, 5), dtype=np.uint8)
@@ -112,13 +112,13 @@ def grassFire (newMaskMatrix, coordinates, currentId, tileValue):
         currentPosition = burnedQueue.pop()
         y, x = currentPosition
         if newMaskMatrix[y, x] == tileValue:
-        # Burn current_pos with current id and increment current blobSize, and increment crowncounter
+        # Burn current_pos with current id and increment current blobSize and crowncounter
             sizeOfBlob += 1
             newMaskMatrix[y, x] = currentId
             crownCounter += templateMatching.crownMatrix[y, x]
 
 
-        # Add connections to burn_queue
+        # check if the surroundings of the current coordinate has the same tilevalue
         if (y - 1 >= 0) and (newMaskMatrix[y - 1, x] == tileValue):
             burnedQueue.append((y - 1, x))
         if (x - 1 >= 0) and (newMaskMatrix[y, x - 1] == tileValue):
@@ -156,6 +156,8 @@ print("Total score is:", totalScoreCount)
 
 while True:
     cv2.imshow("Picture", picture0)
+    #cv2.imshow("CrownMask", morphedCrownMask2)
+    #cv2.imshow("SAND", morphedSandMask)
     key = cv2.waitKey(1) #when the user presses esc key, the program shuts down
     if key == 27:
         break
