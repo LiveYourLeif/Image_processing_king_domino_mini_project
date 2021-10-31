@@ -3,7 +3,7 @@ from collections import deque
 import cv2
 import numpy as np
 
-picture = cv2.imread("Images/5.jpg", 0) #Change here to find the crowns in another photo!!
+picture = cv2.imread("Images/1.jpg", 0) #Change here to find the crowns in another photo!!
 templateOriginal = cv2.imread("Images/EditedTemplateForcrown.png", 0)
 templateRotate90 = cv2.rotate(cv2.imread("Images/EditedTemplateForcrown.png", 0), cv2.ROTATE_90_CLOCKWISE)
 templateRotate180 = cv2.rotate(cv2.imread("Images/EditedTemplateForcrown.png", 0), cv2.ROTATE_180)
@@ -20,6 +20,7 @@ coordinatesAreClose = False
 for template in templateList: #itererer over de fire retninger af konge kronen
     res = cv2.matchTemplate(picture, template, cv2.TM_CCOEFF_NORMED) #comparer vores almindelige billede med vores template
     loc = np.where(res >= threshold) #returns the x and y coordinates where template has matched if they are above the treshold
+    print(loc)
 
 
     for pt in zip(*loc[::-1]):# we zip the x and y coordinates that we get from loc, and iterate over them

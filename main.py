@@ -8,7 +8,7 @@ import templateMatching
 Below the first picture is read, blurred through Gaussian blur and corverted to HSV colors.
 In addition we create an empty 5x5 matrix, which is used later on to perform the Grassfire algorithm.
 '''
-picture0 = cv2.imread("Images/5.jpg")
+picture0 = cv2.imread("Images/1.jpg")
 blurredPicture = cv2.GaussianBlur(picture0, (5, 5), 0)
 picture1 = cv2.cvtColor(blurredPicture, cv2.COLOR_BGR2HSV)
 maskMatrix = np.zeros((5, 5), dtype=np.uint8)
@@ -154,8 +154,10 @@ print("Total score is:", totalScoreCount)
 
 
 while True:
-    cv2.imshow("forest", forestMask)
-    cv2.imshow("MOForest", morphedForestMask)
+    cv2.imshow("CROWN", crownMask)
+    cv2.imshow("Morphed Crown", morphedCrownMask)
+    cv2.imshow("Double morhped crown", morphedCrownMask2)
+    cv2.imshow("CrownMatrix",)
     #cv2.imshow("desertmorphed2", morphedDesertMask2)
     key = cv2.waitKey(1) #when the user presses esc key, the program shuts down
     if key == 27:
