@@ -97,7 +97,8 @@ print(maskMatrix)
 
 
 def grassFire (newMaskMatrix, coordinates, currentId, tileValue):
-    #create burnedQueue deque to keep track of positions to burn
+    #we create a deque to append the coordinates we have burned
+    #and create variables for keeping track of blobsize and crowns
     burnedQueue = deque([])
     somethingBurned = False
     sizeOfBlob = 0
@@ -111,7 +112,7 @@ def grassFire (newMaskMatrix, coordinates, currentId, tileValue):
         currentPosition = burnedQueue.pop()
         y, x = currentPosition
         if newMaskMatrix[y, x] == tileValue:
-        # Burn current_pos with current id and increment current blobSize
+        # Burn current_pos with current id and increment current blobSize, and increment crowncounter
             sizeOfBlob += 1
             newMaskMatrix[y, x] = currentId
             crownCounter += templateMatching.crownMatrix[y, x]
@@ -154,11 +155,7 @@ print("Total score is:", totalScoreCount)
 
 
 while True:
-    cv2.imshow("CROWN", crownMask)
-    cv2.imshow("Morphed Crown", morphedCrownMask)
-    cv2.imshow("Double morhped crown", morphedCrownMask2)
-    cv2.imshow("CrownMatrix",)
-    #cv2.imshow("desertmorphed2", morphedDesertMask2)
+    cv2.imshow("Picture", picture0)
     key = cv2.waitKey(1) #when the user presses esc key, the program shuts down
     if key == 27:
         break

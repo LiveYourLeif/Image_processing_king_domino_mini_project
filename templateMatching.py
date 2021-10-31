@@ -20,7 +20,6 @@ coordinatesAreClose = False
 for template in templateList: #itererer over de fire retninger af konge kronen
     res = cv2.matchTemplate(picture, template, cv2.TM_CCOEFF_NORMED) #comparer vores almindelige billede med vores template
     loc = np.where(res >= threshold) #returns the x and y coordinates where template has matched if they are above the treshold
-    print(loc)
 
 
     for pt in zip(*loc[::-1]):# we zip the x and y coordinates that we get from loc, and iterate over them
