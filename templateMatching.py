@@ -6,7 +6,7 @@ import numpy as np
 load in our picture and our template. We rotate the template four times each time with 90 degrees since the crowns 
 can vary in their rotation.
 '''
-picture = cv2.imread("Images/3.jpg", 0) #Change here to find the crowns in another photo!!
+picture = cv2.imread("Images/1.jpg", 0) #Change here to find the crowns in another photo!!
 templateOriginal = cv2.imread("Images/EditedTemplateForcrown.png", 0)
 templateRotate90 = cv2.rotate(cv2.imread("Images/EditedTemplateForcrown.png", 0), cv2.ROTATE_90_CLOCKWISE)
 templateRotate180 = cv2.rotate(cv2.imread("Images/EditedTemplateForcrown.png", 0), cv2.ROTATE_180)
@@ -44,7 +44,6 @@ for template in templateList: #We iterate over the four angles of the template s
             crownMatrix[pt[1] // 100, pt[0] // 100] +=1 #increment the point in the matrix with the given coordinates with 1
 print(crownMatrix)
 cv2.imshow("game maps", picture)
-cv2.imshow("template", templateOriginal)
 
 cv2.waitKey(0)
 
