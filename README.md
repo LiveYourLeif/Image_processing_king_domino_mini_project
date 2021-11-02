@@ -7,4 +7,7 @@ score, press esc.
 
 
 # Instructions 
-By changing the picture variable in both “main.py” and “templateMatching.py” to your desired game layout(jpg. file in the image), the program will calculate the final points. 
+By changing the picture variable in both “main.py” and “templateMatching.py” 
+to your desired game layout(jpg. file in the image), the program will calculate the final points.
+When main.py is running, it will first show the crownMatrix and the template matching. You need to press 
+esc to let the program run the rest of the code. In the console you will see the final score.
